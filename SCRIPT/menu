@@ -107,7 +107,7 @@ SCPidioma="${SCPdir}/idioma"
 local LINGUAGE=$(cat ${SCPidioma})
 [[ -z $LINGUAGE ]] && LINGUAGE=es
 [[ $LINGUAGE = "es" ]] && echo "$@" && return
-[[ ! -e /usr/bin/trans ]] && wget -O /usr/bin/trans https://www.dropbox.com/s/wfrbkbzhqnyoehc/trans &> /dev/null
+[[ ! -e /usr/bin/trans ]] && wget -O /usr/bin/trans https://raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/ArchivosUtilitarios/trans &> /dev/null
 [[ ! -e /etc/texto-adm ]] && touch /etc/texto-adm
 source /etc/texto-adm
 if [[ -z "$(echo ${texto[$@]})" ]]; then
@@ -124,7 +124,7 @@ atualiza_fun () {
 clear
 rm -rf instalscript.sh &>/dev/null
 [[ ! -e /etc/versin_script ]] && echo 1 > /etc/versin_script
-v1=$(curl -sSL "www.dropbox.com/s/b0esdwzyontf6cf/vercionpanel")
+v1=$(curl -sSL "https://raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/Vercion")
 v2=$(cat /etc/versin_script)
 
 [[ $v1 = $v2 ]] && vesaoSCT="\033[1;32m          ##Version Actualizada##" || vesaoSCT="\033[1;31m          ##Version Desactualizada##\n\033[1;35m   Debe contar con una Key valida para Actualizar" 
@@ -146,7 +146,7 @@ tput cuu1 && tput dl1
 done
 if [[ $Key = @(s|S|y|Y) ]]; then
 msg -verm "$(fun_trans "Perfecto Iniciando Procedimento") "
-wget -O $HOME/instalscript.sh https://www.dropbox.com/s/4olol8n8f936cfq/actscript.sh &>/dev/null
+wget -O $HOME/instalscript.sh https://raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/ArchivosUtilitarios/actscript.sh &>/dev/null
 chmod +x $HOME/instalscript.sh*
 local LINGUAGE=$(cat ${SCPidioma})
 $HOME/instalscript.sh "${LINGUAGE}"
