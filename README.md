@@ -1,2 +1,2 @@
-# VPS-MX-8.0
-Instalador como ficheros del Scrip VPS-MX
+# Script Manager (VPS-MX-8.0)
+Info de Instalador como ficheros del Scrip VPS-MX
