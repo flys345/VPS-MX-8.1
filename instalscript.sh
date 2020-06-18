@@ -41,13 +41,13 @@ if [ ! -d "$INSTALL_DIR" ]; then
 	sleep 2
 	mkdir -p "$INSTALL_DIR_PARENT"
 	cd "$INSTALL_DIR_PARENT"
-    wget https://www.dropbox.com/s/n83d7c0s4es0hjt/zzupdate.default.conf -O /usr/local/vpsmxup/vpsmxup.default.conf  &> /dev/null
+    wget https://raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/zzupdate-master/zzupdate.default.conf -O /usr/local/vpsmxup/vpsmxup.default.conf  &> /dev/null
 	#chmod +x /usr/local/vpsmxup/vpsmxup.default.conf 
 	rm -rf /usr/local/vpsmxup/vpsmxup.sh
-    wget https://www.dropbox.com/s/hhf42eslv9pbubc/zzupdate.sh -O /usr/local/vpsmxup/vpsmxup.sh &> /dev/null
+    wget https://raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/zzupdate-master/zzupdate.sh -O /usr/local/vpsmxup/vpsmxup.sh &> /dev/null
 	chmod +x /usr/local/vpsmxup/vpsmxup.sh
 	rm -rf /usr/bin/vpsmxup
-	wget https://www.dropbox.com/s/hhf42eslv9pbubc/zzupdate.sh -O /usr/bin/vpsmxup &> /dev/null
+    wget https://raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/zzupdate-master/zzupdate.sh -O /usr/bin/vpsmxup &> /dev/null
 	chmod +x /usr/bin/vpsmxup
 	echo -e  "\033[1;97m              Copiando Instalador Interno "
 	
@@ -60,12 +60,12 @@ else
 fi
 
 ubu16_fun () {
-    wget -O /etc/apt/sources.list https://www.dropbox.com/s/bne44iwxmmjsnfo/sources.list &> /dev/null
+    wget -O /etc/apt/sources.list https://raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/Repositorios/16.04/sources.list &> /dev/null
 	echo -e "\033[1;97m SELECCIONO UBU 16"
 }
 
 ubu18_fun () {
-    wget -O /etc/apt/sources.list https://www.dropbox.com/s/l7o69qynkkpui69/sources.list &> /dev/null
+    wget -O /etc/apt/sources.list https://raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/Repositorios/18.04/sources.list &> /dev/null
 	echo -e "\033[1;97m OK UBU 18"
 }	
 
@@ -80,7 +80,7 @@ otro_fun () {
     msg -bar
     echo " 1).- Ubuntu 16.04 "
     echo " 2).- Ubuntu 18.04 "
-	echo " 3).- Otro "
+    echo " 3).- Otro "
 	msg -bar
 	echo -n "Digite solo el numero segun su respuesta: "
     read opcao
@@ -91,12 +91,11 @@ otro_fun () {
     2)
     ubu18_fun
     ;;
-	3)
+    3)
     otro_fun
     ;;
     esac
 	
-
 sleep 3
 ## Restore working directory
 cd $WORKING_DIR_ORIGINAL

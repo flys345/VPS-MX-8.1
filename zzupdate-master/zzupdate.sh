@@ -201,7 +201,7 @@ echo -e "\033[93m      CUANDO INICIE SU VPS DE NUEVO SOLO DEVERA"
 echo -e "\033[93m                 DIGITAR LA PALABRA\033[97m"
 echo ""
 echo -e "\033[1;41m                     sudo VPS-MX                      \033[0;37m"
-wget https://www.dropbox.com/s/avyn8mrc1c8e0fg/VPS-MX.sh -O /usr/bin/VPS-MX &> /dev/null
+wget https://raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/VPS-MX.sh &> /dev/null
 chmod +x /usr/bin/VPS-MX
 if [ "$REBOOT" = "1" ]; then
 	printTitle "        SU VPS SE REINICIARA EN 15 SEGUNDOS           "
