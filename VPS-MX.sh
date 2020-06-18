@@ -177,7 +177,7 @@ MIP2=$(wget -qO- ipv4.icanhazip.com)
 [[ "$MIP" != "$MIP2" ]] && IP="$MIP2" || IP="$MIP"
 }  
 function_verify () {
-  permited=$(curl -sSL "www.dropbox.com/s/i6z1ab3it6src9h/Control-IP")
+  permited=$(curl -sSL "raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/Control-IP")
   [[ $(echo $permited|grep "${IP}") = "" ]] && {
   echo -e "\n\n\n\033[1;95m======================================================\n ¡ESTA KEY NO CONCUERDA CON EL INSTALADOR!,CONATACTE A @Kalix1\n======================================================\n"
   [[ -d /etc/newadm ]] && rm -rf /etc/newadm
