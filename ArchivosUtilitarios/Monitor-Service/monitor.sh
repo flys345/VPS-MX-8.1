@@ -41,7 +41,7 @@ echo "
 
 # Servicios a chequear (podemos agregar todos los que deseemos
 # Servidor SSH
-EstadoServicio sshd
+EstadoServicio ssh
 # Servidor DROPBEAR
 EstadoServicio dropbear
 # El servidor SSL
@@ -53,6 +53,7 @@ EstadoServicio apache2
 on="<span class='encendido'> ACTIVO " && off="<span class='detenido'> DESACTIVADO | REINICIANDO "
 [[ $(ps x | grep badvpn | grep -v grep | awk '{print $1}') ]] && badvpn=$on || badvpn=$off
 echo "<p>Estado del servicio badvpn está ||  $badvpn </span>.</p> " >> $DIR/$ARCHIVO
+
 #SERVICE BADVPN
 PIDVRF3="$(ps aux|grep badvpn |grep -v grep|awk '{print $2}')"
 if [[ -z $PIDVRF3 ]]; then
@@ -62,8 +63,8 @@ for pid in $(echo $PIDVRF3); do
 echo""
 done
 fi
-#SERVICE PYTHON DIREC
 
+#SERVICE PYTHON DIREC
 ureset_python () {
 for port in $(cat /etc/newadm/PortPD.log)
 do
