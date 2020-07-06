@@ -69,7 +69,8 @@ if [[ -z $PIDVRF3 ]]; then
 screen -dmS badvpn2 /bin/badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 1000 --max-connections-for-client 10
 NOM="$(less /etc/newadm/ger-user/nombre.log)"
 NOM1="$(echo $NOM)"
-USERID="475422642"
+IDB="$(less /etc/newadm/ger-user/IDT.log)" 
+USERID="$(echo $IDB)"
 KEY="862633455:AAGJ9BBJanzV6yYwLSemNAZAVwn7EyjrtcY"
 URL="https://api.telegram.org/bot$KEY/sendMessage"
 MSG="⚠️ AVISO DE VPS: $NOM1 ⚠️
@@ -90,7 +91,8 @@ if [[ -z $PIDVRF3 ]]; then
 screen -dmS pydic-"$port" python /etc/ger-inst/PDirect.py "$port"
 NOM="$(less /etc/newadm/ger-user/nombre.log)"
 NOM1="$(echo $NOM)"
-USERID="475422642"
+IDB="$(less /etc/newadm/ger-user/IDT.log)" 
+USERID="$(echo $IDB)"
 KEY="862633455:AAGJ9BBJanzV6yYwLSemNAZAVwn7EyjrtcY"
 URL="https://api.telegram.org/bot$KEY/sendMessage"
 MSG="⚠️ AVISO DE VPS: $NOM1 ⚠️
