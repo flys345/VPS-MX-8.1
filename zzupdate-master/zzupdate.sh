@@ -191,7 +191,7 @@ apt-get autoremove -y
 printTitle "Versión actual"
 lsb_release -d
 
-printTitle "Tiempo tomó Actulizacion"
+printTitle "Tiempo que tomó Actulizacion"
 echo "$((($(date +%s)-$TIME_START)/60)) min."
 msg -bar2
 echo -e "\033[93m           -- ACTULIZACION CASI COMPLETA -- "
@@ -204,7 +204,7 @@ echo -e "\033[1;41m                     sudo VPS-MX                      \033[0;
 wget https://raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/VPS-MX.sh -O /usr/bin/VPS-MX &> /dev/null
 chmod +x /usr/bin/VPS-MX
 if [ "$REBOOT" = "1" ]; then
-	printTitle "        SU VPS SE REINICIARA EN 15 SEGUNDOS           "
+	printTitle "        SU VPS SE REINICIARA EN 20 SEGUNDOS           "
 	
 	while [ $REBOOT_TIMEOUT -gt 0 ]; do
 	   echo -ne "                         -$REBOOT_TIMEOUT-\033[0K\r"
