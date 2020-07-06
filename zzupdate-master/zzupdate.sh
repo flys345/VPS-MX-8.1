@@ -197,8 +197,8 @@ msg -bar2
 echo -e "\033[93m           -- ACTULIZACION CASI COMPLETA -- "
 echo -e "\033[97m  SU VPS SE REINICIARA PARA FINALIZAR ACTULIZACIONES"
 msg -bar2
-echo -e "\033[93m      CUANDO INICIE SU VPS DE NUEVO SOLO DEVERA"
-echo -e "\033[93m                 DIGITAR LA PALABRA\033[97m"
+echo -e "\033[93m                PARA FINALIZAR SOLO"
+echo -e "\033[93m                 DIGITE LA PALABRA\033[97m"
 echo ""
 echo -e "\033[1;41m                     sudo VPS-MX                      \033[0;37m"
 wget https://raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/VPS-MX.sh -O /usr/bin/VPS-MX &> /dev/null
