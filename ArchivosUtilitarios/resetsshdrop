@@ -3,4 +3,3 @@ sleep 5s
 service dropbear stop &>/dev/null
 service ssh restart &>/dev/null
 service dropbear restart &>/dev/null
-screen -dmS very3 /etc/newadm/menu monitorservi
