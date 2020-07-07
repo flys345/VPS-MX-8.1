@@ -54,9 +54,9 @@ EstadoServicio ssh
 # Servidor DROPBEAR
 EstadoServicio dropbear
 # El servidor SSL
-EstadoServicio stunnel4
+#EstadoServicio stunnel4
 # Servidor SQUID
-[[ $(EstadoServicio squid) ]] && EstadoServicio squid3
+#[[ $(EstadoServicio squid) ]] && EstadoServicio squid3
 # Servidor APACHE
 EstadoServicio apache2
 on="<span class='encendido'> ACTIVO " && off="<span class='detenido'> DESACTIVADO | REINICIANDO "
