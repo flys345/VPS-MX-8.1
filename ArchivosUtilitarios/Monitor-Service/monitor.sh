@@ -17,16 +17,17 @@ EstadoServicio() {
         echo "<p>Estado del servicio $1 está || <span class='encendido'> ACTIVO</span>.</p>" >> $DIR/$ARCHIVO
     else
         echo "<p>Estado del servicio $1 está || <span class='detenido'> DESACTIVADO | REINICIANDO</span>.</p>" >> $DIR/$ARCHIVO
-		service $1 restart && 
-		NOM=`less /etc/newadm/ger-user/nombre.log` > /dev/null 2>&1
-        NOM1=`echo $NOM` > /dev/null 2>&1
-        IDB=`less /etc/newadm/ger-user/IDT.log` > /dev/null 2>&1
-        IDB1=`echo $IDB` > /dev/null 2>&1
-        KEY="862633455:AAGJ9BBJanzV6yYwLSemNAZAVwn7EyjrtcY"
-        URL="https://api.telegram.org/bot$KEY/sendMessage"
-        MSG="⚠️ AVISO DE VPS: $NOM1 ⚠️
-		❗️Service $1 con fallo / Reiniciando❗️"
-		curl -s --max-time 10 -d "chat_id=$IDB1&disable_web_page_preview=1&text=$MSG" $URL
+		service $1 restart &
+NOM=`less /etc/newadm/ger-user/nombre.log` > /dev/null 2>&1
+NOM1=`echo $NOM` > /dev/null 2>&1
+IDB=`less /etc/newadm/ger-user/IDT.log` > /dev/null 2>&1
+IDB1=`echo $IDB` > /dev/null 2>&1
+KEY="862633455:AAGJ9BBJanzV6yYwLSemNAZAVwn7EyjrtcY"
+URL="https://api.telegram.org/bot$KEY/sendMessage"
+MSG="⚠️ AVISO DE VPS: $NOM1 ⚠️
+❗️Protocolo $1 con fallo / Reiniciando❗️"
+curl -s --max-time 10 -d "chat_id=$IDB1&disable_web_page_preview=1&text=$MSG" $URL
+		
     fi
 }
 
@@ -48,22 +49,25 @@ echo "
 <hr>
 " > $DIR/$ARCHIVO
 
+
+
+
 # Servicios a chequear (podemos agregar todos los que deseemos
-# Servidor SSH
+# PROTOCOLO SSH
 EstadoServicio ssh
-# Servidor DROPBEAR
+# PROTOCOLO DROPBEAR
 EstadoServicio dropbear
-# El servidor SSL
+# PROTOCOLO SSL
 EstadoServicio stunnel4
-# Servidor SQUID
+# PROTOCOLOSQUID
 [[ $(EstadoServicio squid) ]] && EstadoServicio squid3
-# Servidor APACHE
+# PROTOCOLO APACHE
 EstadoServicio apache2
 on="<span class='encendido'> ACTIVO " && off="<span class='detenido'> DESACTIVADO | REINICIANDO "
 [[ $(ps x | grep badvpn | grep -v grep | awk '{print $1}') ]] && badvpn=$on || badvpn=$off
 echo "<p>Estado del servicio badvpn está ||  $badvpn </span>.</p> " >> $DIR/$ARCHIVO
-#SERVICE BADVPN
 
+#SERVICE BADVPN
 PIDVRF3="$(ps aux|grep badvpn |grep -v grep|awk '{print $2}')"
 if [[ -z $PIDVRF3 ]]; then
 screen -dmS badvpn2 /bin/badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 1000 --max-connections-for-client 10
@@ -105,6 +109,7 @@ done
 fi
 done
 }
+
 ureset_python
 
 pidproxy3=$(ps x | grep -w  "PDirect.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy3 ]] && P3="<span class='encendido'> ACTIVO " || P3="<span class='detenido'> DESACTIVADO | REINICIANDO "

@@ -119,6 +119,36 @@ echo -e "\033[1;92m   ¡¡CONTADORES REINICIADOS!!"
 msg -bar
 }
 
+droppids () {
+local pids
+local port_dropbear=`ps aux | grep dropbear | awk NR==1 | awk '{print $17;}'`
+cat /var/log/auth.log|grep "$(date|cut -d' ' -f2,3)" > /var/log/authday.log
+# cat /var/log/auth.log|tail -1000 > /var/log/authday.log
+local log=/var/log/authday.log
+local loginsukses='Password auth succeeded'
+[[ -z $port_dropbear ]] && return 1
+for port in `echo $port_dropbear`; do
+ for pidx in $(ps ax |grep dropbear |grep "$port" |awk -F" " '{print $1}'); do
+  pids="${pids}$pidx\n"
+ done
+done
+for pid in `echo -e "$pids"`; do
+  pidlogs=`grep $pid $log |grep "$loginsukses" |awk -F" " '{print $3}'`
+  i=0
+    for pidend in $pidlogs; do
+    let i++
+    done
+    if [[ $pidend ]]; then
+    login=$(grep $pid $log |grep "$pidend" |grep "$loginsukses")
+    PID=$pid
+    user=`echo $login |awk -F" " '{print $10}' | sed -r "s/'//g"`
+    waktu=$(echo $login |awk -F" " '{print $2"-"$1,$3}')
+    [[ -z $user ]] && continue
+	echo "$user|$PID|$waktu"
+    fi
+done
+}
+
 block_userfun () {
 local USRloked="/etc/newadm-userlock"
 local LIMITERLOG="${USRdatabase}/Limiter.log"
@@ -126,15 +156,17 @@ local LIMITERLOG2="${USRdatabase}/Limiter2.log"
 if [[ $2 = "-loked" ]]; then 
 [[ $(cat ${USRloked}|grep -w "$1") ]] && return 1
 echo " $1 (BLOCK-MULTILOGIN) $(date +%r--%d/%m/%y)"
+limseg="$(less /etc/newadm/ger-user/tiemdes.log)"
 KEY="862633455:AAGJ9BBJanzV6yYwLSemNAZAVwn7EyjrtcY"
 URL="https://api.telegram.org/bot$KEY/sendMessage"
 MSG="⚠️ AVISO DE VPS: $NOM1 ⚠️
 🔹 CUENTA: $1 
-❗️📵 BLOQUEADO TEMPORALMENTE 📵❗️
-🔓( DESBLOQUEO EN 60 SEGUNDOS) 🔓"
+❗️📵 BLOCK FIJO/TEMPORAL 📵❗️
+🔓( AUTOUNLOCK EN $limseg SEGUNDOS) 🔓"
 curl -s --max-time 10 -d "chat_id=$IDB1&disable_web_page_preview=1&text=$MSG" $URL &>/dev/null
 
 pkill -u $1 &>/dev/null
+
 fi
 if [[ $(cat ${USRloked}|grep -w "$1") ]]; then
 usermod -U "$1" &>/dev/null
@@ -157,6 +189,10 @@ return 1
 else
 usermod -L "$1" &>/dev/null
 pkill -u $1 &>/dev/null
+
+droplim=`droppids|grep -w "$1"|cut -d'|' -f2` 
+kill -9 $droplim &>/dev/null
+
 echo $1 >> ${USRloked}
 #notifi &>/dev/null
 return 0
@@ -479,6 +515,8 @@ fi
      }
 msg -ne "$(fun_trans "Usuario Seleccionado"): " && echo -ne "$usuario_del" 
 pkill -u $usuario_del
+droplim=`droppids|grep -w "$usuario_del"|cut -d'|' -f2` 
+kill -9 $droplim &>/dev/null
 rm_user "$usuario_del" && msg -verd " [$(fun_trans "Removido")]" || msg -verm " [$(fun_trans "No Removido")]"
 rm -rf /etc/newadm-userlock
 rm -rf /etc/newadm/ger-user/Limiter.log
@@ -807,7 +845,7 @@ curl -s --max-time 10 -d "chat_id=$IDB1&disable_web_page_preview=1&text=$MSG" $U
            if [[ ${conexao[$user]} -gt '0' ]]; then #CONTADOR DE TEMPO ONLINE
               [[ -z "${TIMEUS[$user]}" ]] && local TIMEUS[$user]=0
               [[ "${TIMEUS[$user]}" != +([0-9]) ]] && local TIMEUS[$user]=0
-              local TIMEUS[$user]="$((57+${TIMEUS[$user]}))"
+              local TIMEUS[$user]="$((300+${TIMEUS[$user]}))"
               local VARS="$(cat ${MyTIME}|grep -w -v "$user")"
               echo "TIMEUS[$user]='${TIMEUS[$user]}'" > ${MyTIME}
              for variavel in $(echo ${VARS}); do echo "${variavel}" >> ${MyTIME}; done
@@ -842,7 +880,9 @@ curl -s --max-time 10 -d "chat_id=$IDB1&disable_web_page_preview=1&text=$MSG" $U
     #echo "${EXPIRED}0"|bc > ${SCPdir}/USRexpired
 	echo "${EXPIRADO2}${EXPIRADO3}"|bc > ${SCPdir}/USRexpired
 	echo "${BLOQUEADO2}${BLOQUEADO3}"|bc > ${SCPdir}/USRbloqueados
-	sleep 25s # TEMPO DE ESPERA DO LOOP
+	limseg="$(less /etc/newadm/ger-user/tiemlim.log)"
+	
+	sleep $limseg # TEMPO DE ESPERA DO LOOP
     clear
     done
 }
@@ -896,13 +936,12 @@ verif_funx () {
 echo -e "\033[1;32m             LIMITADOR DE CUENTAS"
 msg -bar
 echo -e "Esta Opcion Limita las Conexiones de SSH/SSL/DROPBEAR"
-msg -bar
-[[ -z ${VERY} ]] && verificar="\033[1;32m ACTIVADO " || verificar="\033[1;31m DESACTIVADO "
-echo -e "            $verificar  --  CON EXITO"
-msg -bar
-
 PIDVRF="$(ps aux|grep "${SCPusr}/usercodes verificar"|grep -v grep|awk '{print $2}')"
 if [[ -z $PIDVRF ]]; then
+msg -bar
+echo -ne "\033[1;96m   ¿Cada cuantos segundos ejecutar el limitador?\n\033[1;97m  +Segundos = -Uso de CPU | -Segundos = +Uso de CPU\033[0;92m \n                Predeterminado:\033[1;37m 120s\n     Cuantos Segundos (Numeros Unicamente): " && read tiemlim   
+[[ -z "$tiemlim" ]] && tiemlim="120"
+echo "${tiemlim}" > /etc/newadm/ger-user/tiemlim.log
 cd ${SCPusr}
 screen -dmS very ${SCPusr}/usercodes verificar
 else
@@ -913,22 +952,24 @@ done
 [[ -e ${SCPdir}/USRexpired ]] && rm ${SCPdir}/USRexpired
 [[ -e ${SCPdir}/USRbloqueados ]] && rm ${SCPdir}/USRbloqueados
 fi
+msg -bar
+[[ -z ${VERY} ]] && verificar="\033[1;32m ACTIVADO " || verificar="\033[1;31m DESACTIVADO "
+echo -e "            $verificar  --  CON EXITO"
+msg -bar
 }
 
 ##DESBLOEUEAR
 
 verif2_funx () {
-
 echo -e "\033[1;32m      DESBLOQUEO AUT. Y LIMPIADOR DE EXPIARDOS"
 msg -bar
 echo -e "Esta opcion desbloquea cada 60 segundos a usuarios\nbloqueados por el limitador y limpia los usuarios expirados"
-msg -bar
-[[ -z ${VERY2} ]] && desbloqueo="\033[1;32m ACTIVADO " || desbloqueo="\033[1;31m DESACTIVADO "
-echo -e "            $desbloqueo  --  CON EXITO"
-msg -bar
-
 PIDVRF2="$(ps aux|grep "${SCPusr}/usercodes desbloqueo"|grep -v grep|awk '{print $2}')"
 if [[ -z $PIDVRF2 ]]; then
+msg -bar
+echo -ne "\033[1;96m   ¿Cada cuantos segundos ejecutar el desbloqueador?\n\033[1;97m  +Segundos = -Uso de CPU | -Segundos = +Uso de CPU\033[0;92m \n                Predeterminado:\033[1;37m 300s\n     Cuantos Segundos (Numeros Unicamente): " && read tiemdes   
+[[ -z "$tiemdes" ]] && tiemdes="300"
+echo "${tiemdes}" > /etc/newadm/ger-user/tiemdes.log
 cd ${SCPusr}
 screen -dmS very2 ${SCPusr}/usercodes desbloqueo
 else
@@ -937,6 +978,10 @@ kill -9 $pid &>/dev/null
 done
 
 fi
+msg -bar
+[[ -z ${VERY2} ]] && desbloqueo="\033[1;32m ACTIVADO " || desbloqueo="\033[1;31m DESACTIVADO "
+echo -e "            $desbloqueo  --  CON EXITO"
+msg -bar
 }
 
 baner_fun () {
@@ -972,10 +1017,11 @@ sleep 3s
 desbloqueo_auto () {
 while true; do
 Desbloqueo.sh 2>/dev/null
-sleep 60s 
-
+tiemdes="$(less /etc/newadm/ger-user/tiemdes.log)"
+sleep $tiemdes
     done
 }
+
 rec_total () {
 echo -e "\033[1;32m  REGISTRO TOTAL DE CUENTAS VIEJAS Y NUEVAS"
 msg -bar

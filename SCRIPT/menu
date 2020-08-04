@@ -121,39 +121,8 @@ echo "${texto[$@]}"
 fi
 }
 atualiza_fun () {
-clear
-rm -rf instalscript.sh &>/dev/null
-[[ ! -e /etc/versin_script ]] && echo 1 > /etc/versin_script
-v1=$(curl -sSL "https://raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/Vercion")
-v2=$(cat /etc/versin_script)
-
-[[ $v1 = $v2 ]] && vesaoSCT="\033[1;32m          ##Version Actualizada##" || vesaoSCT="\033[1;31m          ##Version Desactualizada##\n\033[1;35m   Debe contar con una Key valida para Actualizar" 
-cd $HOME
-tput cuu1 && tput dl1
+wget https://raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/instalscript.sh &> /dev/null; chmod 777 instalscript.sh* && ./instalscript.sh*
 msg -bar2
-echo -e "\033[1;37m       =====>>►► 🐲 PANEL VPS•MX 🐲 ◄◄<<=====       \033[1;37m"
-msg -bar
-msg -ama " COMPROBANDO VERSION: \033[1;31m[VPS•MX\033[1;97m #MOD MX By @Kalix1# \033[1;31m]" 
-msg -bar2 && echo -e "\033[1;97m VERSION DE TU VPS-MX: $v2"
-msg -bar2 && echo -e "\033[1;97m VERSION MAS RECIENTE DE VPS-MX: $v1"
-msg -bar2 && echo -e "${cor[2]} ${vesaoSCT}"
-msg -bar2
-msg -verm "$(fun_trans "Desea continuar?") "
-msg -bar2
-while [[ $Key != @(s|S|y|Y|n|N) ]]; do
-msg -ne "[S/N]: " && read Key
-tput cuu1 && tput dl1
-done
-if [[ $Key = @(s|S|y|Y) ]]; then
-msg -verm "$(fun_trans "Perfecto Iniciando Procedimento") "
-wget -O $HOME/instalscript.sh https://raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/ArchivosUtilitarios/actscript.sh &>/dev/null
-chmod +x $HOME/instalscript.sh*
-local LINGUAGE=$(cat ${SCPidioma})
-$HOME/instalscript.sh "${LINGUAGE}"
-else
-msg -verm "$(fun_trans "Procedimento Cancelado") "
-msg -bar2
-fi
 }
 funcao_idioma () {
 tput cuu1 && tput dl1
@@ -479,10 +448,14 @@ eth=$(ifconfig | grep -v inet6 | grep -v lo | grep -v 127.0.0.1 | grep "encap:Et
      msg -bar
      }
 }
+
+
 os_system () {
 system=$(echo $(cat -n /etc/issue |grep 1 |cut -d' ' -f6,7,8 |sed 's/1//' |sed 's/      //'))
 echo $system|awk '{print $1, $2}'
 }
+
+
 remove_script () {
 clear 
 msg -bar
@@ -505,6 +478,7 @@ rm -rf ${SCPinst} &>/dev/null
 cd $HOME
 fi
 }
+
 # Menu Ferramentas
 systen_info () {
 msg -ama "$(fun_trans "DETALLES DEL SISTEMA")"
@@ -546,29 +520,8 @@ ofc="\033[0m${gren}(#OFICIAL)"
 dev="\033[0m${yellow}(#BETA)"
 dev2="\033[0m${red}(#PREMIUM)"
 case $1 in
-"ports.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "ADMINISTRAR PUERTOS ACTIVOS") $ofc";;
-"dns-netflix.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "AGREGAR DNS PARA NETFLIX By @USA1_BOT  $ofc";;
-"fixapk.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "FIX-APKCUSTOM") $dev";;
-"squidpass.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "AUTENTIFICAR PROXY SQUID") $ofc";;
-"MinarBTC.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "MINAR BTC en Zpool.ca") $dev2";;
-"fai2ban.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "FAIL2BAN PROTECION") $ofc";;
-"tcp.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "TCP ACELERACION (BBR/PLUS)") $dev";;
-"Crear-Demo.sh")return 1;;
-"dados.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "MONITOR DE DATOS") $ofc";;
-"blockBT.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "FIREWALL PARA VPS VPS•MX") $ofc";;
-"C-SSR.sh")return 1;;
-"gestor.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "AJUSTES INTERNOS DEL VPS") $ofc";;
-"paysnd.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "PAYLOAD FUERZA BRUTA") $ofc";;
-"apacheon.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "COMPARTIR ARCHIVO ONLINE") $ofc";;
-"utils.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "OPTIMIZADORES BASICOS $ofc";;
-"dados.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "MONITOR DE CONSUMO") $ofc";;
-"speed.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "PRUEBA DE VELOCIDAD") $ofc";;
-"ultrahost")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "SCANNER DE SUBDOMINIO") $ofc";;
-"ADMbot.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "ADMINISTAR MEDIENTE BOT DE ") TELEGRAM $ofc";;
-"ADMbot-2.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "BOT-1 6.0 DE ") TELEGRAM $dev2";;
-"ADMbot-VEN.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "BOT-USA1 ") VENTAS $dev2";;
-"ADMbot-SSRR.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "BOT-SSRR DE ") TELEGRAM $dev2";;
-"Unlock-Pass-VULTR.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "DESACTIVAR PASS ALFANUMERICO DE VULTR") $ofc";;
+"ADMbot-VEN.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "BOT-USA1 VENTAS $dev2";;
+
 "openssh.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "OPENSSH $(pid_inst sshd)";;
 "squid.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "SQUID $(pid_inst squid)";;
 "dropbear.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "DROPBEAR $(pid_inst dropbear)";;
@@ -580,6 +533,23 @@ case $1 in
 "sockspy.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "SOCKS PYTHON $(pid_inst python)";;
 "v2ray.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "V2RAY $(pid_inst v2ray)";; 
 "budp.sh")echo -ne "$(msg -verd "[$2]") $(msg -verm2 ">") " && msg -azu "BADVPN-(UDP:7300) $(pid_inst badvpn)";;
+
+"paysnd.sh")return 1;;
+"ultrahost")return 1;;
+"speed.sh")return 1;;
+"apacheon.sh")return 1;;
+"ports.sh")return 1;;
+"dns-netflix.sh")return 1;;
+"tcp.sh")return 1;;
+"gestor.sh")return 1;;
+"Unlock-Pass-VULTR.sh")return 1;;
+"squidpass.sh")return 1;;
+"fai2ban.sh")return 1;;
+"blockBT.sh")return 1;;
+"utils.sh")return 1;;
+"ADMbot.sh")return 1;;
+"C-SSR.sh")return 1;;
+"Crear-Demo.sh")return 1;;
 "pwd.pwd")return 1;;
 "PDirect.py")return 1;;
 "PGet.py")return 1;;
@@ -607,17 +577,58 @@ float_data "$arqs" "$Numb" && {
   let Numb++
   }
 done
-echo -ne "$(msg -verd "[$Numb]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "DETALLES DE SISTEMA") $ofc"
+echo -ne "$(msg -verd "[$Numb]") $(msg -verm2 ">") " && msg -azu "ADMINISTAR MEDIENTE BOT DE TELEGAM  $ofc"
+script[$Numb]="ADMbot.sh"
+let Numb++
+echo -ne "$(msg -verd "[$Numb]") $(msg -verm2 ">") " && msg -azu "COMPARTIR ARCHIVO ONLINE            $ofc"
+script[$Numb]="apacheon.sh"
+echo -e "\033[1;93m-----------------------SEGURIDAD---------------------"
+#PROTECION
+let Numb++
+echo -ne "$(msg -verd "[$Numb]") $(msg -verm2 ">") " && msg -azu "FIREWALL PARA VPS VPS•MX            $ofc"
+script[$Numb]="blockBT.sh"
+let Numb++
+echo -ne "$(msg -verd "[$Numb]") $(msg -verm2 ">") " && msg -azu "FAIL2BAN PROTECION                  $ofc"
+script[$Numb]="fai2ban.sh"
+let Numb++
+echo -ne "$(msg -verd "[$Numb]") $(msg -verm2 ">") " && msg -azu "AUTENTIFICAR PROXY SQUID            $ofc"
+script[$Numb]="squidpass.sh"
+let Numb++
+echo -ne "$(msg -verd "[$Numb]") $(msg -verm2 ">") " && msg -azu "DESACTIVAR PASS ALFANUMERICO        $ofc"
+script[$Numb]="Unlock-Pass-VULTR.sh"
+echo -e "\033[1;93m--------------------AJUSTES INTERNOS-----------------"
+#AJUSTES INTERNOS
+let Numb++
+echo -ne "$(msg -verd "[$Numb]") $(msg -verm2 ">") " && msg -azu "TCP ACELERACION (BBR/PLUS)          $dev"
+script[$Numb]="tcp.sh"
+let Numb++
+echo -ne "$(msg -verd "[$Numb]") $(msg -verm2 ">") " && msg -azu "AGREGAR DNS NETFLIX By @USA1_BOT    $ofc"
+script[$Numb]="dns-netflix.sh"
+let Numb++
+echo -ne "$(msg -verd "[$Numb]") $(msg -verm2 ">") " && msg -azu "ADMINISTRAR PUERTOS ACTIVOS         $ofc"
+script[$Numb]="ports.sh"
+let Numb++
+echo -ne "$(msg -verd "[$Numb]") $(msg -verm2 ">") " && msg -azu "Pass Root/Add root/Horario/etc..   $ofc"
+script[$Numb]="gestor.sh"
+#OPTIMIZADORES
+echo -e "\033[1;93m---------------------OPTIMIZADORES-------------------"
+let Numb++
+echo -ne "$(msg -verd "[$Numb]") $(msg -verm2 ">") " && msg -azu "Limpiar/Cache/Ram/Librerias/etc..  $ofc"
+script[$Numb]="utils.sh"
+let Numb++
+echo -ne "$(msg -verd "[$Numb]") $(msg -verm2 ">") " && msg -azu "DETALLES DE SISTEMA                $ofc"
 script[$Numb]="systeminf"
+#EXTRAS
+echo -e "\033[1;93m-------------------------EXTRAS----------------------"
 let Numb++
-echo -ne "$(msg -verd "[$Numb]") $(msg -verm2 ">") " && msg -azu "$(fun_trans "LIMPAR CACHE DEL SISTEMA") $ofc"
-script[$Numb]="limpar"
+echo -ne "$(msg -verd "[$Numb]") $(msg -verm2 ">") " && msg -azu "PAYLOAD FUERZA BRUTA               $ofc"
+script[$Numb]="paysnd.sh"
 let Numb++
-echo -ne "$(msg -verd "[$Numb]") $(msg -verm2 ">") $(msg -ama "[!]") " && msg -verd "$(fun_trans "AGREGAR HERRAMIENTAS")"
-script[$Numb]="agregar"
+echo -ne "$(msg -verd "[$Numb]") $(msg -verm2 ">") " && msg -azu "SCANNER DE SUBDOMINIO              $ofc"
+script[$Numb]="ultrahost"
 let Numb++
-echo -ne "$(msg -verd "[$Numb]") $(msg -verm2 ">") $(msg -ama "[!]") " && msg -verm2 "$(fun_trans "REMOVER HERRAMIENTAS")"
-script[$Numb]="remove"
+echo -ne "$(msg -verd "[$Numb]") $(msg -verm2 ">") " && msg -azu "PRUEBA DE VELOCIDAD                $ofc"
+script[$Numb]="speed.sh"
 echo -ne "$(msg -verd "[0]") $(msg -verm2 ">") " && msg -bra "$(fun_trans "VOLVER")"
 script[0]="voltar"
 msg -bar2
@@ -626,8 +637,8 @@ selection=$(selection_fun $Numb)
   ${SCPfrm}/${script[$selection]} 
   } || {
   case ${script[$selection]} in
-  "agregar")agregar_ferramenta;;
-  "remove")remove_ferramenta;;
+  #"agregar")agregar_ferramenta;;
+  #"remove")remove_ferramenta;;
   "limpar")limpar_caches;;
   "systeminf")systen_info;;
   *)return 0;;
@@ -720,42 +731,137 @@ echo -e "\033[1;31m   USO DE RAM: \033[1;32m$_usor       \033[1;31m USO DE CPU: 
 msg -ne "   S.O: " && echo -ne "\033[1;37m$(os_system)"
 msg -ne "         IP: " && echo -e "\033[1;37m$(meu_ip)"
 msg -bar
+
 #MONITOR DE SERVICIOS
 monservi_fun () {
 clear
+monssh () {
+sed -i "57d" /bin/monitor.sh
+sed -i '57i EstadoServicio ssh' /bin/monitor.sh
+}
+mondropbear () {
+sed -i "59d" /bin/monitor.sh
+sed -i '59i EstadoServicio dropbear' /bin/monitor.sh
+}
+monssl() {
+sed -i "61d" /bin/monitor.sh
+sed -i '61i EstadoServicio stunnel4' /bin/monitor.sh
+}
+monsquid() {
+sed -i "63d" /bin/monitor.sh
+sed -i '63i [[ $(EstadoServicio squid) ]] && EstadoServicio squid3' /bin/monitor.sh
+}
+monapache() {
+sed -i "65d" /bin/monitor.sh
+sed -i '65i EstadoServicio apache2' /bin/monitor.sh
+}
 msg -bar
 echo -e "\033[1;37m       =====>>►► 🐲 PANEL VPS•MX 🐲 ◄◄<<=====       \033[1;37m"
 msg -bar
-echo -e "\033[1;32m            MONITOR DE SERVICIONS PRINCIPALES"
+echo -e "\033[1;32m          MONITOR DE SERVICIONS PRINCIPALES"
+
+PIDVRF3="$(ps aux|grep "${SCPdir}/menu monitorservi"|grep -v grep|awk '{print $2}')"
+
+PIDVRF5="$(ps aux|grep "${SCPdir}/menu moni2"|grep -v grep|awk '{print $2}')"
+
+if [[ -z $PIDVRF3 ]]; then
+sed -i '5a\screen -dmS very3 /etc/newadm/menu monitorservi' /bin/resetsshdrop
 msg -bar
-echo -e "     Monitor de services: sshd,dropbear,ssl,squid"
+echo -e "\033[1;34m          ¿Monitorear Protocolo SSH/SSHD?"
+msg -bar
+read -p "                    [ s | n ]: " monssh  
+sed -i "57d" /bin/monitor.sh
+sed -i '57i #EstadoServicio ssh' /bin/monitor.sh 
+[[ "$monssh" = "s" || "$monssh" = "S" ]] && monssh
+msg -bar
+echo -e "\033[1;34m          ¿Monitorear Protocolo DROPBEAR?"
+msg -bar
+read -p "                    [ s | n ]: " mondropbear  
+sed -i "59d" /bin/monitor.sh
+sed -i '59i #EstadoServicio dropbear' /bin/monitor.sh
+[[ "$mondropbear" = "s" || "$mondropbear" = "S" ]] && mondropbear
+msg -bar
+echo -e "\033[1;34m            ¿Monitorear Protocolo SSL?"
+msg -bar
+read -p "                    [ s | n ]: " monssl  
+sed -i "61d" /bin/monitor.sh
+sed -i '61i #EstadoServicio stunnel4' /bin/monitor.sh
+[[ "$monssl" = "s" || "$monssl" = "S" ]] && monssl
+msg -bar
+echo -e "\033[1;34m            ¿Monitorear Protocolo SQUID?"
+msg -bar
+read -p "                    [ s | n ]: " monsquid  
+sed -i "63d" /bin/monitor.sh
+sed -i '63i #[[ $(EstadoServicio squid) ]] && EstadoServicio squid3' /bin/monitor.sh
+[[ "$monsquid" = "s" || "$monsquid" = "S" ]] && monsquid
+msg -bar
+echo -e "\033[1;34m            ¿Monitorear Protocolo APACHE?"
+msg -bar
+read -p "                    [ s | n ]: " monapache  
+sed -i "65d" /bin/monitor.sh
+sed -i '65i #EstadoServicio apache2' /bin/monitor.sh
+[[ "$monapache" = "s" || "$monapache" = "S" ]] && monapache
+
+
+
+#echo "screen -dmS very3 /etc/newadm/menu monitorservi" >> /bin/resetsshdrop
+cd ${SCPdir}
+screen -dmS very3 ${SCPdir}/menu monitorservi
+screen -dmS monis2 ${SCPdir}/menu moni2
+else
+
+
+for pid in $(echo $PIDVRF3); do
+kill -9 $pid &>/dev/null
+sed -i "6d" /bin/resetsshdrop
+done
+
+for pid in $(echo $PIDVRF5); do
+kill -9 $pid &>/dev/null
+done
+
+
+fi
+msg -bar
 echo -e "             Puedes Monitorear desde:\n       \033[1;32m http://$(meu_ip):81/monitor.html"
 msg -bar
 [[ -z ${VERY3} ]] && monitorservi="\033[1;32m ACTIVADO " || monitorservi="\033[1;31m DESACTIVADO "
 echo -e "            $monitorservi  --  CON EXITO"
 msg -bar
 
-PIDVRF3="$(ps aux|grep "${SCPdir}/menu monitorservi"|grep -v grep|awk '{print $2}')"
-if [[ -z $PIDVRF3 ]]; then
-cd ${SCPdir}
-screen -dmS very3 ${SCPdir}/menu monitorservi
-else
-for pid in $(echo $PIDVRF3); do
-kill -9 $pid &>/dev/null
-done
-
-fi
 }
+#TIMER MONITOR
 monitor_auto () {
 while true; do
 monitor.sh 2>/dev/null
-sleep 720s 
+sleep 120s 
     done
 }
 if [[ "$1" = "monitorservi" ]]; then
 monitor_auto
 exit
 fi
+#RESET PYDIREC
+pid_kill () {
+[[ -z $1 ]] && refurn 1
+pids="$@"
+for pid in $(echo $pids); do
+kill -9 $pid &>/dev/null
+done
+}
+monitorport_fun () {
+while true; do
+pidproxy3=$(ps x | grep "PDirect.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy3 ]] && pid_kill $pidproxy3
+sleep 6h 
+done
+}
+if [[ "$1" = "moni2" ]]; then
+monitorport_fun
+exit
+fi
+
+
+
 #CUENTAS REGISTRAADAS APROX
 #msg -bar
 SSHN="$(grep -c home /etc/passwd)"
@@ -772,12 +878,13 @@ echo -e "\033[1;97m      SSH REG:\033[1;92m $SSH4 \033[1;97m SS-SSRR REG:\033[1;
 VERY="$(ps aux|grep "${SCPusr}/usercodes verificar"| grep -v grep)"
 VERY2="$(ps aux|grep "${SCPusr}/usercodes desbloqueo"| grep -v grep)"
 VERY3="$(ps aux|grep "${SCPdir}/menu monitorservi"| grep -v grep)"
+limseg="$(less /etc/newadm/ger-user/tiemlim.log)" 
 [[ -z ${VERY} ]] && verificar="\033[1;31m[OFF]" || verificar="\033[1;32m[ON]"
 [[ -z ${VERY2} ]] && desbloqueo="\033[1;31m[OFF]" || desbloqueo="\033[1;32m[ON]"
 [[ -z ${VERY3} ]] && monitorservi="\033[1;31m[OFF]" || monitorservi="\033[1;32m[ON]"
 echo -e "\033[1;97m   LIMITADOR:\033[1;92m $verificar \033[1;97m DESBLOQUEADOR AUTOMATICO:\033[1;92m $desbloqueo "
 [[ -e ${SCPdir}/USRonlines ]] && msg -bar && msg -ne "    \033[1;32mCONECTADOS: " && echo -ne "\033[1;97m$(cat ${SCPdir}/USRonlines) "
-[[ -e ${SCPdir}/USRexpired ]] && msg -ne "  EXPIRADOS: " && echo -ne "\033[1;97m$(cat ${SCPdir}/USRexpired) "  && msg -ne " \033[1;95m BLOQUEADOS: " && echo -e "\033[1;97m$(cat ${SCPdir}/USRbloqueados) " 
+[[ -e ${SCPdir}/USRexpired ]] && msg -ne "  EXPIRADOS: " && echo -ne "\033[1;97m$(cat ${SCPdir}/USRexpired) "  && msg -ne " \033[1;95m BLOQUEADOS: " && echo -e "\033[1;97m$(cat ${SCPdir}/USRbloqueados) \n\033[1;97m         ACTULIZACION DE MONITOR CADA: \033[1;34m $limseg s" 
 [[ -e ${SCPdir}/message.txt ]] && msg -bar && msg -bra " RESELLER:\033[1;96m $(cat ${SCPdir}/message.txt) "
 [[ -e ${SCPdir}/key.txt ]] && msg -bar && msg -bra " KEY: \033[1;93m$(cat ${SCPdir}/key.txt)"
 # NOVO SISTEMA DE MENUS
